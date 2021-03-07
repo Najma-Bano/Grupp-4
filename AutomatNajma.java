@@ -15,8 +15,8 @@ import java.util.Scanner;
 abstract class Products {
 	private final String name;
 	private final String description;
-	private final int cost;
-	private int prodCount;
+	private final int cost; // Cost of prod
+	private int prodCount; // count of prod in the machine
 
 	public Products(String name, String description, int cost, int prodCount) {
 		// System.out.println("Constructing a product " + name);
@@ -53,7 +53,7 @@ abstract class Products {
 
 }
 
-// Subclass (inherit from Product)
+// Subclass inherited from Product
 class Drink extends Products {
 	public Drink(String name, String description, int cost, int prodCount) {
 		super(name, description, cost, prodCount);
@@ -151,7 +151,11 @@ class Wallet {
 }
 
 public class AutomatNajma {
-
+    
+    /* Parse input string for deniminators
+     * Split them with comma delimitor and put them in an 
+     * array of integer
+    */
     public static int[] parseMoney(String money) {
         String[] numberMoneyInText = money.split(",");
         int[] result = new int[numberMoneyInText.length];
@@ -161,6 +165,9 @@ public class AutomatNajma {
         return result;
     }
 
+    /* Calculate total money from the input denominations
+       after parsing it and converting to integers
+    */
     public static int getTotal(int[] money) {
         int total = 0;
         total = total + money[0];
@@ -175,14 +182,16 @@ public class AutomatNajma {
      */
     public static void main(String args[]) {
 
-        Wallet wallet = new Wallet(10, 10, 10, 10);
-        List<Products> listProducts;
+        Wallet wallet = new Wallet(10, 10, 10, 10); // Create Wallet object
+        List<Products> listProducts; // Create list of products
         listProducts = new ArrayList<>();
         listProducts.add(new Drink("Coke", "SoftDrink", 10, 10));
         listProducts.add(new Drink("Apple Juice", "Concentarted Flavoured", 10, 20));
         listProducts.add(new Toy("Disney Frozen Doll", "Anna Doll", 10, 20));
         listProducts.add(new Food("Twix", "Choclate with buiscuit", 10, 20));
         listProducts.add(new Food("Mars", "Choclate with caramel", 10, 20));
+        
+        // Get number of denominations from the wallet
         int kronor1 = wallet.getnumber1();
         int kronor5 = wallet.getnumber5();
         int kronor10 = wallet.getnumber10();
@@ -204,12 +213,14 @@ public class AutomatNajma {
                 System.out.println("     " + index + "  " + product.getName() + " - Price: " + product.getCost()
                         + "   Available:" + product.getProdCount());
             }
-            System.out.println("      Enter 0 to exit                                             ");
+            System.out.println("     0  to Exit program                                           ");
             System.out.println("                                                                  ");
+            // Take input from user
             Scanner scanner = new Scanner(System.in);
             System.out.println("                                              ");
 
             System.out.println(" Please select your product: ");
+            // input product number from user in integer
             int prodNum = scanner.nextInt();
             if (prodNum == 0) {
                 System.exit(0);
@@ -230,18 +241,20 @@ public class AutomatNajma {
             System.out.println("Enter money denominator, comma separetd");
             String enteredMoney = scanner.nextLine();
 
-            int[] AMoney = parseMoney(enteredMoney);
+            int[] AMoney = parseMoney(enteredMoney); // Parse money
             // System.out.println(getTotal(AMoney));
             int totMoney = getTotal(AMoney);
             if (kronor1 < AMoney[0] || kronor5 < AMoney[1] || kronor10 < AMoney[2] || kronor20 < AMoney[3]) {
                 System.out.println("More money entered than available in Wallet!");
                 continue;
             }
+            // Update wallet denominators
             wallet.setNumber1(kronor1 - AMoney[0]);
             wallet.setNumber5(kronor5 - AMoney[1]);
             wallet.setNumber10(kronor10 - AMoney[2]);
             wallet.setNumber20(kronor20 - AMoney[3]);
 
+            // Get back all denominators in local var after update
             kronor1 = wallet.getnumber1();
             kronor5 = wallet.getnumber5();
             kronor10 = wallet.getnumber10();
@@ -254,6 +267,9 @@ public class AutomatNajma {
             }
             totMoney = totMoney - prodCost;
             // System.out.println("Return money " + totMoney + " Kronor");
+            /* Covert the money in higher denominator, so when returning to user
+             * We return higher denominator 
+            */
             int retKronor20 = totMoney / 20;
             totMoney = totMoney % 20;
             int retKronor10 = totMoney / 10;
@@ -262,6 +278,7 @@ public class AutomatNajma {
             totMoney = totMoney % 5;
             int retKronor1 = totMoney / 1;
 
+            // Update wallet values
             wallet.setNumber1(kronor1 + retKronor1);
             wallet.setNumber5(kronor5 + retKronor5);
             wallet.setNumber10(kronor10 + retKronor10);
@@ -271,6 +288,7 @@ public class AutomatNajma {
             kronor5 = wallet.getnumber5();
             kronor10 = wallet.getnumber10();
             kronor20 = wallet.getnumber20();
+            // Buy product and decrease the counter of the product
             e.buy();
 
             System.out.println(" Money In wallet, 1 kronor: " + kronor1);
